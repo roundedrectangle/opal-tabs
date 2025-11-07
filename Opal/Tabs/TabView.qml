@@ -22,6 +22,9 @@ PagedView {
     default property alias items: itemContainer.data
     model: items
 
+    property bool tabLoadingAnimation: true
+    property bool tabFadeAnimation: true
+
     property Component header
     property Component footer
     property bool hasFooter: footer
@@ -105,7 +108,7 @@ PagedView {
         readonly property bool isCurrentItem: PagedView.isCurrentItem
         readonly property real _yOffset: item && item._yOffset || 0
 
-        property bool loading: Qt.application.active && isCurrentItem && status === /*Animated*/Loader.Loading
+        property bool loading: tabLoadingAnimation && Qt.application.active && isCurrentItem && status === /*Animated*/Loader.Loading
 
         sourceComponent: model.modelData.body
         asynchronous: true
@@ -114,7 +117,7 @@ PagedView {
         height: item ? item.implicitHeight : root.contentItem.height
 
         onItemChanged: {
-            if (!item) return
+            if (!tabFadeAnimation || !item) return
             tabFadeAnimation.target = null
             item.focus = true
             item.opacity = 0
